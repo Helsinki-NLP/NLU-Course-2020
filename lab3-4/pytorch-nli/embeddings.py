@@ -54,24 +54,10 @@ class BiLSTMEncoder(nn.Module):
     """
     def __init__(self, config):
         super(BiLSTMEncoder, self).__init__()
-        self.config = config
-        self.rnn1 = nn.LSTM(input_size=config.embed_dim,
-                           hidden_size=config.hidden_dim,
-                           num_layers=config.layers,
-                           dropout=0,
-                           bidirectional=True)
 
-        self.max_pool = nn.AdaptiveMaxPool1d(1)
 
     def forward(self, inputs):
-        batch_size = inputs.size()[1]
-        h_0 = c_0 = Variable(inputs.data.new(self.config.cells,
-                                             batch_size,
-                                             self.config.hidden_dim).zero_())
-        embedding = self.rnn1(inputs, (h_0, c_0))[0]
-        # Max pooling
-        emb = self.max_pool(embedding.permute(1,2,0))
-        emb = emb.squeeze(2)
+
         return emb
 
 
@@ -81,23 +67,9 @@ class LSTMEncoder(nn.Module):
     """
     def __init__(self, config):
         super(LSTMEncoder, self).__init__()
-        self.config = config
-        self.rnn = nn.LSTM(input_size=config.embed_dim,
-                           hidden_size=config.hidden_dim,
-                           num_layers=config.layers,
-                           dropout=0,
-                           bidirectional=False)
-        self.batch_norm = nn.BatchNorm1d(config.hidden_dim)
-
+       
     def forward(self, inputs):
-        batch_size = inputs.size()[1]
-        h_0 = c_0 = Variable(inputs.data.new(self.config.cells,
-                                             batch_size,
-                                             self.config.hidden_dim).zero_())
-        embedding = self.rnn(inputs, (h_0, c_0))[1][0]
-        embedding = embedding.squeeze(0)
-        embedding = self.batch_norm(embedding)
-        return embedding
+        return emb
 
 
 class ConvEncoder(nn.Module):
@@ -106,56 +78,8 @@ class ConvEncoder(nn.Module):
     """
     def __init__(self, config):
         super(ConvEncoder, self).__init__()
-        self.config = config
-        self.max_pool = nn.AdaptiveMaxPool1d(1)
-        self.convnet1 = nn.Sequential(
-            nn.Conv1d(config.embed_dim,
-                      2*config.hidden_dim,
-                      kernel_size=3,
-                      stride=1,
-                      padding=1),
-            nn.ReLU(inplace=True))
-        self.convnet2 = nn.Sequential(
-            nn.Conv1d(2*config.hidden_dim,
-                      2*config.hidden_dim,
-                      kernel_size=3,
-                      stride=1,
-                      padding=1),
-            nn.ReLU(inplace=True))
-        self.convnet3 = nn.Sequential(
-            nn.Conv1d(2*config.hidden_dim,
-                      2*config.hidden_dim,
-                      kernel_size=3,
-                      stride=1,
-                      padding=1),
-            nn.ReLU(inplace=True))
-        self.convnet4 = nn.Sequential(
-            nn.Conv1d(2*config.hidden_dim,
-                      2*config.hidden_dim,
-                      kernel_size=3,
-                      stride=1,
-                      padding=1),
-            nn.ReLU(inplace=True))
-
-    def forward(self, inputs):
-        embedding = inputs
-
-        embedding = embedding.transpose(0, 1).transpose(1, 2).contiguous()
-
-        sentence = self.convnet1(embedding)
-        emb1 = self.max_pool(sentence)
-
-        sentence = self.convnet2(sentence)
-        emb2 = self.max_pool(sentence)
-
-        sentence = self.convnet3(sentence)
-        emb3 = self.max_pool(sentence)
-
-        sentence = self.convnet4(sentence)
-        emb4 = self.max_pool(sentence)
-
-        emb = torch.cat([emb1, emb2, emb3, emb4], 1)
-        emb = emb.squeeze(2)
+        
+    def forward(self, inputs): 
         return emb
 
 

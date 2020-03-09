@@ -81,12 +81,6 @@ tokenizer.fit_on_texts(training[0] + training[1])
 # Lowest index from the tokenizer is 1 - we need to include 0 in our vocab count
 VOCAB = len(tokenizer.word_counts) + 1
 LABELS = {'contradiction': 0, 'neutral': 1, 'entailment': 2}
-#RNN = recurrent.LSTM
-#RNN = lambda *args, **kwargs: Bidirectional(recurrent.LSTM(*args, **kwargs))
-#RNN = recurrent.GRU
-#RNN = lambda *args, **kwargs: Bidirectional(recurrent.GRU(*args, **kwargs))
-# Summation of word embeddings
-RNN = None
 LAYERS = 1
 USE_GLOVE = True
 TRAIN_EMBED = False
@@ -149,9 +143,6 @@ if USE_GLOVE:
 else:
   embed = Embedding(VOCAB, EMBED_HIDDEN_SIZE, input_length=MAX_LEN)
 
-rnn_kwargs = dict(output_dim=SENT_HIDDEN_SIZE, dropout_W=DP, dropout_U=DP)
-SumEmbeddings = keras.layers.core.Lambda(lambda x: K.sum(x, axis=1), output_shape=(SENT_HIDDEN_SIZE, ))
-
 translate = TimeDistributed(Dense(SENT_HIDDEN_SIZE, activation=ACTIVATION))
 
 premise = Input(shape=(MAX_LEN,), dtype='int32')
@@ -163,16 +154,10 @@ hypo = embed(hypothesis)
 prem = translate(prem)
 hypo = translate(hypo)
 
-if RNN and LAYERS > 1:
-  for l in range(LAYERS - 1):
-    rnn = RNN(return_sequences=True, **rnn_kwargs)
-    prem = BatchNormalization()(rnn(prem))
-    hypo = BatchNormalization()(rnn(hypo))
-rnn = SumEmbeddings if not RNN else RNN(return_sequences=False, **rnn_kwargs)
-prem = rnn(prem)
-hypo = rnn(hypo)
-prem = BatchNormalization()(prem)
-hypo = BatchNormalization()(hypo)
+### Homework: Implement encoder here
+
+
+### END of RNN
 
 joint = merge([prem, hypo], mode='concat')
 joint = Dropout(DP)(joint)

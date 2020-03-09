@@ -20,14 +20,12 @@ class FCClassifier(nn.Module):
         self.seq_in_size = 4*config.hidden_dim
         self.fc_dim = config.fc_dim
         self.out_dim = config.out_dim
-        if self.config.encoder_type == 'BiLSTMMaxPoolEncoder' or self.config.encoder_type == 'BiLSTMInnerAttentionEncoder' or self.config.encoder_type == 'NGramEncoder':
+        if self.config.encoder_type == 'BiLSTMEncoder':
             self.seq_in_size *= 2
         elif self.config.encoder_type == 'AttnEncoder':
             self.seq_in_size *= 4
-        elif self.config.encoder_type == 'ConvEncoder' or self.config.encoder_type == 'HBMP' or self.config.encoder_type == 'HConvEncoder':
+        elif self.config.encoder_type == 'HBMP' or self.config.encoder_type == 'ConvEncoder':
             self.seq_in_size *= 6
-        elif self.config.encoder_type == 'MASE':
-            self.seq_in_size *= 12
         self.mlp = nn.Sequential(
             nn.Dropout(p=self.dropout),
             nn.Linear(self.seq_in_size, self.fc_dim),

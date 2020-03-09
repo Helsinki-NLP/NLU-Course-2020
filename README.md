@@ -1,1 +1,3 @@
-# NLU_course_2020
+# NLU Course 2020
+
+Work in progress...

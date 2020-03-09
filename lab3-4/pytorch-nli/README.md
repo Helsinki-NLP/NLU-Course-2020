@@ -61,7 +61,3 @@ python3 train.py \
   --seed 1234
   ```
 
-## References
-
-[1] Aarne Talman, Anssi Yli-Jyrä and Jörg Tiedemann. 2018. [Natural Language Inference with Hierarchical BiLSTM Max Pooling Architecture](https://arxiv.org/pdf/1808.08762.pdf)
-

@@ -1,4 +1,7 @@
 *.jsonl
 *.pyc
 .DS_Store
-
+._DS_Store
+._Icon
+._snli_1.0
+._README.txt

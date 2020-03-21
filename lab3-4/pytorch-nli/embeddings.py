@@ -43,10 +43,6 @@ class SentenceEmbedding(nn.Module):
         embedding = self.encoder(sentence)
         return embedding
 
-    def encode(self, input_sentence):
-        embedding = self.encoder(input_sentence)
-        return embedding
-
 
 class BiLSTMEncoder(nn.Module):
     """

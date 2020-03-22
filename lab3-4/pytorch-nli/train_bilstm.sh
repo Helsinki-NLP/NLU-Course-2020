@@ -1,19 +1,20 @@
 #!/bin/bash -l
-#SBATCH -J SNLI_InferSent_4096D
-#SBATCH -o out_InferSent_4096D_%J.txt
-#SBATCH -e err_InferSent_4096D_%J.txt
+#SBATCH -J InferSent_train
+#SBATCH -o out_InferSent_train_%J.txt
+#SBATCH -e err_InferSent_train_%J.txt
 #SBATCH -p gpu
-#SBATCH -N 1
 #SBATCH -n 1
-#SBATCH -t 08:00:00
-#SBATCH --mem-per-cpu=16000
+#SBATCH -N 1
+#SBATCH -t 24:00:00
+#SBATCH --mem=8000
 #SBATCH --gres=gpu:v100:1
+#SBATCH --account=project_2001403
 # run command
-module purge
-module load gcc cuda pytorch
-module list
 
-srun python3 train.py \
+module purge
+module load pytorch/1.0.1
+
+srun python train.py \
   --epochs 20 \
   --batch_size 64 \
   --corpus snli \

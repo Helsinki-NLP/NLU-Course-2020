@@ -24,7 +24,7 @@ class FCClassifier(nn.Module):
             self.seq_in_size *= 2
         elif self.config.encoder_type == 'AttnEncoder':
             self.seq_in_size *= 4
-        elif self.config.encoder_type == 'HBMP' or self.config.encoder_type == 'ConvEncoder':
+        elif self.config.encoder_type == 'ConvEncoder':
             self.seq_in_size *= 6
         self.mlp = nn.Sequential(
             nn.Dropout(p=self.dropout),
@@ -33,12 +33,10 @@ class FCClassifier(nn.Module):
             nn.Dropout(p=self.dropout),
             nn.Linear(self.fc_dim, self.fc_dim),
             self.activation,
-            #nn.Dropout(p=self.dropout),
             nn.Linear(self.fc_dim, self.out_dim))
 
     def forward(self, prem, hypo):
         features = torch.cat([prem, hypo, torch.abs(prem-hypo), prem*hypo], 1)
-        #print(features.size())
 
         output = self.mlp(features)
         return output

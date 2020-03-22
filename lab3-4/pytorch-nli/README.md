@@ -26,8 +26,6 @@ This will download the needed datasets and word embeddings, including:
 * [GloVe 840B 300D](https://nlp.stanford.edu/projects/glove/)
 * [SNLI](https://nlp.stanford.edu/projects/snli/)
 * [MultiNLI](https://www.nyu.edu/projects/bowman/multinli/)
-* [SciTail](http://data.allenai.org/scitail/)
-* [Breaking NLI](https://github.com/BIU-NLP/Breaking_NLI)
 
 **Train a model**
 

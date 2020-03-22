@@ -13,13 +13,13 @@ import torchtext
 from torchtext import data
 from torchtext import datasets
 from embeddings import NLIModel
-from corpora import MultiNLI, SciTail, StanfordNLI, AllNLI, BreakingNLI, RTE, Sick
+from corpora import MultiNLI, StanfordNLI
 
 
 parser = ArgumentParser(description='Helsinki NLI')
 parser.add_argument("--corpus",
                     type=str,
-                    choices=['snli', 'breaking_nli', 'multinli_matched', 'multinli_mismatched', 'scitail', 'all_nli', 'rte', 'sick'],
+                    choices=['snli', 'multinli_matched', 'multinli_mismatched'],
                     default='snli')
 parser.add_argument('--epochs',
                     type=int,
@@ -32,7 +32,7 @@ parser.add_argument("--encoder_type",
                     choices=['BiLSTMEncoder',
                              'LSTMEncoder',
                              'ConvEncoder',
-                             'HBMP',],
+                             'SumEncoder',],
                     default='BiLSTMEncoder')
 parser.add_argument("--activation",
                     type=str,
@@ -57,7 +57,7 @@ parser.add_argument('--fc_dim',
                     default=600)
 parser.add_argument('--hidden_dim',
                     type=int,
-                    default=1200)
+                    default=600)
 parser.add_argument('--layers',
                     type=int,
                     default=1)
@@ -139,21 +139,6 @@ def main():
         train, dev, test = MultiNLI.splits_mismatched(inputs, labels, id_field)
         f = open(config.corpus+'_kaggle_test.csv', 'w+')
         id_field.build_vocab(train, dev, test)
-    elif config.corpus == 'scitail':
-        train, dev, test = SciTail.splits(inputs, labels)
-    elif config.corpus == 'rte':
-        train, dev, test = RTE.splits(inputs, labels, id_field)
-        id_field.build_vocab(train, dev, test)
-    elif config.corpus == 'sick':
-        train, dev, test = Sick.splits(inputs, labels, id_field)
-        id_field.build_vocab(train, dev, test)
-    elif config.corpus == 'all_nli':
-        train, dev, test = AllNLI.splits(inputs, labels, id_field)
-        id_field.build_vocab(train, dev, test)
-    elif config.corpus == 'breaking_nli':
-        train, dev, test = BreakingNLI.splits(inputs, labels, category_field, id_field)
-        category_field.build_vocab(test)
-        id_field.build_vocab(train, dev, test)
     else:
         train, dev, test = StanfordNLI.splits(inputs, labels, id_field)
         id_field.build_vocab(train, dev, test)
@@ -180,7 +165,7 @@ def main():
     config.out_dim = len(labels.vocab)
     config.cells = config.layers
 
-    if config.encoder_type != 'LSTMEncoder':
+    if config.encoder_type == 'BiLSTMEncoder' or config.encoder_type == 'ConvEncoder':
         config.cells *= 2
 
     if config.resume_snapshot:
@@ -391,8 +376,7 @@ def main():
 
                 print('SUMMARY:')
                 print('Encoder: {}'.format(config.encoder_type))
-                if config.encoder_type == 'BiLSTMMaxPoolEncoder' or config.encoder_type == \
-                'HBMP' or config.encoder_type == 'HAttentionBiLSTMEncoder':
+                if config.encoder_type == 'BiLSTMEncoder':
                     print('Sentence embedding size: {}D'.format(2*config.hidden_dim))
                 else:
                     print('Sentence embedding size: {}D'.format(config.hidden_dim))

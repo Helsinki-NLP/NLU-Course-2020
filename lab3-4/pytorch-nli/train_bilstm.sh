@@ -17,7 +17,7 @@ srun python3 train.py \
   --epochs 20 \
   --batch_size 64 \
   --corpus snli \
-  --encoder_type BiLSTMMaxPoolEncoder \
+  --encoder_type BiLSTMEncoder \
   --activation tanh \
   --optimizer sgd \
   --word_embedding glove.840B.300d \

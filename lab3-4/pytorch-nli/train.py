@@ -126,7 +126,7 @@ def main():
     torch.cuda.set_device(config.gpu)
     device = torch.device('cuda:{}'.format(config.gpu))
 
-    inputs = data.Field(lower=config.lower, tokenize='spacy')
+    inputs = data.Field(lower=config.lower, tokenize='moses')
     labels = data.Field(sequential=False, unk_token=None)
     category_field = data.Field(sequential=False)
     id_field = data.Field(sequential=False, unk_token=None)

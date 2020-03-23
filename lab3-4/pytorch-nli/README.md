@@ -5,11 +5,11 @@
 **Install dependencies**
 
 The following dependencies are required (versions used in brackets):
-* Python (3.6.3)
-* Pytorch (1.0.0)
-* Numpy (1.15.4)
+* Python (3.6 or higher)
+* Pytorch (1.0.1)
+* Numpy
 * Torchtext (for preprocessing) (0.4.0)
-* SpaCy (for tokenization) (2.1.3)
+* sacremoses (for tokenization)
 
 For SpaCy you need to download the English model
 

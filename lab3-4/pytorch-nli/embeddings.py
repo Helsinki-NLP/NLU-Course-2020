@@ -101,7 +101,7 @@ class ConvEncoder(nn.Module):
 
 
     def forward(self, inputs): 
-        # Excercise 4: implement convolutional 
+        # Bonus: implement hierarchical convolutional nn encoder
 
         return emb
 

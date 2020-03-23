@@ -11,12 +11,6 @@ The following dependencies are required (versions used in brackets):
 * Torchtext (for preprocessing) (0.4.0)
 * sacremoses (for tokenization)
 
-For SpaCy you need to download the English model
-
-```console
-python -m spacy download en
-```
-
 **Download and prepare the datasets**
 
 ```console
